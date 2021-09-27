@@ -1,0 +1,1 @@
+# kl-hide-premium-content
