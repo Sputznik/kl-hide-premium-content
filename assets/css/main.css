@@ -4,16 +4,6 @@
   height: 150px;
   margin-top: -150px;
 }
-.klhpc-card{
-  background-color: #ffffff;
-  color: rgba(8, 8, 8, 1);
-  padding: 48px 50px;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-}
 
 .klhpc-btn{
   letter-spacing: 1px;
