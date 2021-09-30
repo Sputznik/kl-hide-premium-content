@@ -37,6 +37,9 @@ class KLHPC_ADMIN extends KLHPC_BASE{
 		// CUSTOMIZER OPTIONS
 		add_action( 'customize_register', array( $this, 'klhpcCustomizer' )	);
 
+		// MODIFY WOOCOMMERCE THANK YOU PAGE
+		add_action( 'woocommerce_thankyou', array( $this, 'modifyThankyou' ), 10, 1 );
+
 	}
 
 	function klhpcWidgets(){
@@ -77,6 +80,19 @@ class KLHPC_ADMIN extends KLHPC_BASE{
 
 		}
 
+	}
+
+	function modifyThankyou( $order_id ) {
+		if( isset(	$_COOKIE[$this->cookie_name] ) ){
+
+			$premium_post = "<p>
+				<a href='".$_COOKIE[$this->cookie_name]."' data-behaviour='klhpc_delete_redirect_url_cookie'>"
+				.__('Back to the premium post').
+				"</a></p>";
+
+			echo $premium_post;
+
+		}
 	}
 
 }
