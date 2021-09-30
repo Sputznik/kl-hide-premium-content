@@ -6,7 +6,7 @@ class KLHPC_ADMIN extends KLHPC_BASE{
 
 	function __construct(){
 
-		$this->cookie_name = 'klhpcp_redirect_url_cookie';
+		$this->cookie_name = 'klhpc_redirect_url_cookie';
 
 		// WP SIDEBAR WIDGETS
 		add_action( 'widgets_init', array( $this, "klhpcWidgets" ) );
