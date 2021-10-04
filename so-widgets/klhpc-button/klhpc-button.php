@@ -37,6 +37,16 @@ class KLHPC_Button_Widget extends SiteOrigin_Widget {
           'label'   => __('Redirect URL','siteorigin-widgets'),
           'default' => '',
         ),
+				'btn_text_color' => array(
+          'type' => 'color',
+          'label' => __( 'Button Text Colour', 'siteorigin-widgets' ),
+          'default' => '#e6e6e6'
+        ),
+        'btn_bg_color' => array(
+          'type' => 'color',
+          'label' => __( 'Button Background Colour', 'siteorigin-widgets' ),
+          'default' => '#1a8917'
+        ),
 
 			),
 			//The $base_folder path string.

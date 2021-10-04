@@ -41,4 +41,10 @@ class KLHPC_UTILS extends KLHPC_BASE{
     unset( $_COOKIE[$cookie_name] );
     setcookie( $cookie_name, null, -1, "/" );
   }
+
+  // RETURNS UNIQUE ID
+  public static function klhpcUniqueID( $data ){
+    return substr( md5( json_encode( $data ) ), 0, 8 );
+  }
+
 }
