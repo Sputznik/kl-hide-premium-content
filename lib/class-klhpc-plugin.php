@@ -7,7 +7,7 @@ class KLHPC_PLUGIN extends KLHPC_BASE{
    /* LOAD PLUGIN ASSETS */
    add_action( 'wp_enqueue_scripts', array( $this, 'assets') );
 
-   add_filter( 'the_content', array( $this, 'limitContentCharacters' ) );
+   add_filter( 'the_content', array( $this, 'limitContentCharacters' ), 15 );
 
   }
 
