@@ -12,9 +12,14 @@ class KLHPC_PLUGIN extends KLHPC_BASE{
   }
 
   function limitContentCharacters( $content ){
-
-    if( ! is_user_logged_in() && KLHPC_UTILS::checkFilters() ){
-      return $this->getTruncatedContent( $content, 'klhpc-logged-out-sidebar' );
+    if( ( ! is_user_logged_in() ) && KLHPC_UTILS::checkFilters() ){
+      // SHOW PREMIUM CONTENT IF THE CLIENT IP IS FOUND TO BE IN THE ALLOWED IP RANGE
+      if( ! KLHPC_UTILS::isValidIP() ){
+        return $this->getTruncatedContent( $content, 'klhpc-logged-out-sidebar' );
+      }
+      else{
+        return $content;
+      }
     }
     elseif( is_user_logged_in() && KLHPC_UTILS::checkFilters() && ! KLHPC_UTILS::hasActiveSubscription() ) {
       return $this->getTruncatedContent( $content, 'klhpc-logged-in-sidebar' );
