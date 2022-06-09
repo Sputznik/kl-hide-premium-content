@@ -58,9 +58,8 @@ class KLHPC_UTILS extends KLHPC_BASE{
     // ABORT VALIDATION IF CLIENT IP IS UNKNOWN
     if( $client_ip == "UNKNOWN" ) return $is_valid_ip;
 
-    $ip_str = "128.12.0.0-128.12.255.255,128.135.0.0-128.135.255.255,165.68.0.0-165.68.255.255,205.208.0.0-205.208.127.0,192.170.192.0-192.170.255.255,128.112.0.0-128.112.255.255,140.180.0.0-140.180.255.255,192.55.106.0-192.55.106.255,192.103.13.0-192.103.13.255,192.188.106.0-192.188.106.255,198.35.0.0-198.35.15.255,198.125.224.0-198.125.239.255,5.198.138.135";
-
-    $allowed_ip_range = explode(",", $ip_str);
+    $settings = new KLHPC_ADMIN_PAGES;
+    $allowed_ip_range = $settings->get_settings()['klhpc']['ip_ranges'];
 
     // LOOP THROUGH THE ALLOWED IP RANGE
     foreach ( $allowed_ip_range as $ip_range ) {

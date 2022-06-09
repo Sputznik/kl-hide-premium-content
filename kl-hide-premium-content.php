@@ -18,7 +18,8 @@ define( 'KLHPC_PARTIALS', KLHPC_PATH."partials/" );
 $inc_files = array(
   'class-klhpc-base.php',
   'lib/lib.php',
-  'admin/class-klhpc-admin.php'
+  'admin/class-klhpc-admin.php',
+  'admin/class-klhpc-admin-pages.php'
 );
 
 foreach( $inc_files as $inc_file ){
