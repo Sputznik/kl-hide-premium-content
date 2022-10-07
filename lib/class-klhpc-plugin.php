@@ -31,6 +31,8 @@ class KLHPC_PLUGIN extends KLHPC_BASE{
 
   function getTruncatedContent( $content, $sidebar ){
 
+    $this->disableComments();
+
     global $kl_customize;
 
     $option = $kl_customize->get_option();
@@ -48,7 +50,6 @@ class KLHPC_PLUGIN extends KLHPC_BASE{
 
   }
 
-
   function getTemplate( $sidebar ){
     ob_start();
     include( KLHPC_PARTIALS."/klhpc-sidebar.php");
@@ -62,6 +63,14 @@ class KLHPC_PLUGIN extends KLHPC_BASE{
     // SCRIPTS
     wp_enqueue_script( 'klhpcp-redirect-cookie', KLHPC_URI.'assets/js/main.js', array('jquery'), time(), true );
 
+  }
+
+  // DISABLE COMMENTS
+  function disableComments(){
+    wp_deregister_script( 'comment-reply' ); // DEREGISTER COMMENT REPLY SCRIPT
+    add_filter( 'comments_open', '__return_false', 20, 2 );
+    add_filter( 'pings_open', '__return_false', 20, 2 );
+    add_filter( 'comments_array', '__return_empty_array', 10, 2 ); // HIDE EXISTING COMMENTS
   }
 
 }
