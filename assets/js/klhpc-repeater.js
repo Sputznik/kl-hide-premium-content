@@ -2,10 +2,13 @@ jQuery.fn.klhpc_repeater = function(){
 
 	return this.each(function() {
 
-		var $el 	= jQuery(this),
-			slug		= $el.data('slug'),
-			rows		= $el.data('rows'),
-			fields	= $el.data('fields');
+		var $el 				 = jQuery(this),
+			slug					 = $el.data('slug'),
+			$form_alert 	 = $el.find('#klhpc-form-alert'),
+			$repeater_rows = $el.find("[data-behaviour~=klhpc-repeater-rows]"),
+			rows 					 = JSON.parse($repeater_rows.text()),
+			fields				 = $el.data('fields');
+
 
 		var repeater = ORBIT_REPEATER( {
 			$el							: $el,
@@ -23,6 +26,7 @@ jQuery.fn.klhpc_repeater = function(){
 						repeater.addItem( row );
 					});
 				}
+
 			},
 			addItem	: function( repeater, $list_item, $closeButton, row ){
 
@@ -43,15 +47,21 @@ jQuery.fn.klhpc_repeater = function(){
 				var $header = $list_item.find( '.list-header' );
 				var $content = $list_item.find( '.list-content' );
 
-				var $cf_name= repeater.createField({
-					element : 'label',
-					attr:{
-						'name' : 'customfield[' + repeater.count + ']'
+				// ROW LABEL
+				var $textarea = repeater.createField({
+					element	: 'textarea',
+					attr	: {
+						'name' 				: getAttrName('label'),
+						'placeholder'	: 'IP Range ' + ( repeater.count + 1 )
 					},
-					html: 'IP Range '+(repeater.count+1),
-					append: $header
-				});
+					append	: $header
+				} );
 
+				if( row['label'] ){ $textarea.val( row['label'] ); }
+
+				function getAttrName( field_slug ){
+					return slug + '[' + repeater.count + '][' + field_slug + ']'
+				}
 
 				function getSlug( field_slug ){
 					return slug + "[" + $list_item.data('count') + "]" + "[" + field_slug + "]";
@@ -93,29 +103,12 @@ jQuery.fn.klhpc_repeater = function(){
 					field.append = $containerField;
 
 					switch( field.type ){
-
-						case 'dropdown':
-							repeater.createDropdownField( field );
-							break;
-
 						case 'text':
 							repeater.createInputTextField( field );
 							break;
 
 						case 'textarea':
 							repeater.createTextareaField( field );
-							break;
-
-						case 'repeater-options':
-							var $cf_options = repeater.createField({
-								element	: 'div',
-								attr	: {
-									'data-behaviour' 	: 'orbit-repeater-cf',
-									'data-atts'       : JSON.stringify( row['options'] ? row['options'] : [] )
-								},
-								append	: $containerField
-							});
-							$cf_options.repeater_options( field.slug );
 							break;
 					}
 
@@ -136,6 +129,94 @@ jQuery.fn.klhpc_repeater = function(){
 
 			},
 
+		} );
+
+
+
+		/* FORM VALIDATION */
+
+		/* IP VALIDATION SNIPPET */
+		function is_valid_ip(ip) {
+			if (ip.match('^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$') && ip.split('.').length == 4){
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		function isValidIpRange( ip_range ){
+			var ip_addresses = ip_range.split('-');
+
+			if( ip_addresses.length != 2 ){
+				return false;
+			}
+
+			if( !is_valid_ip( ip_addresses[0] ) || !is_valid_ip( ip_addresses[1] ) ){
+				return false;
+			}
+
+			return true;
+
+		}
+
+		function validateIP( ip_range ){
+			// VALIDATE AN IP_RANGE
+			if(ip_range.indexOf('-') != -1) {
+				if( !isValidIpRange( ip_range ) ) {
+					return false;
+				}
+			}
+			// VALIDATE A SINGLE IP_ADDRESS
+			else if( !is_valid_ip( ip_range) ){
+				return false;
+			}
+
+			return true;
+
+		}
+
+		/* IP VALIDATION SNIPPET */
+
+
+		function validateForm(){
+			var flag 	    = true,
+				fields 			= $el.find('.orbit-field-range input');
+
+				// LOOP THROUGH ALL THE IP_RANGE FIELDS
+				jQuery.each( fields, function( i, field ){
+					var $ip_range 		 = jQuery(field);
+					var ip_range_val 	 = $ip_range.val();
+					var alert_attrs 	 = "class='error notice orbit-ip-field-alert'";
+
+					// CHECKS IF ANY OF THE IP_RANGE FIELDS ARE EMPTY
+					if( !ip_range_val ){
+						$ip_range.closest('.orbit-choice-item').append(`<div ${alert_attrs}><p>IP Address cannot be empty.</p></div>`);
+						flag = false;
+		      }
+					else if( !validateIP( ip_range_val ) ){
+						$ip_range.closest('.orbit-choice-item').append(`<div ${alert_attrs}><p>Invalid IP Address.</p></div>`);
+						flag = false;
+					}
+
+		    });
+
+			return flag;
+		}
+
+		function clearValidationErrors(){
+			$form_alert.hide();
+			$el.find('.orbit-choice-item .error.notice').remove();
+		}
+
+		// FORM SUBMISSION
+		$el.closest('form').submit( function(event){
+
+			clearValidationErrors();
+
+			if( !validateForm() ){
+				event.preventDefault();
+				$form_alert.addClass("error notice").html("<p>There are some errors.</p>").show();
+			}
 		} );
 
 	});

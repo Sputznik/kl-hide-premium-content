@@ -63,7 +63,9 @@ class KLHPC_UTILS extends KLHPC_BASE{
 
     // LOOP THROUGH THE ALLOWED IP RANGE
     foreach ( $allowed_ip_range as $ip_range ) {
-      $temp_range = explode( "-", $ip_range );
+      $temp_range = is_array( $ip_range ) ? explode( "-", $ip_range['range'] ) : explode( "-", $ip_range );
+      // NOTE: COMMENT THE ABOVE LINE & UNCOMMENT THE BELOW LINE AFTER THE DATA HAS BEEN SAVED AT LEAST ONCE WITH THE UPDATED DATA STRUCTURE.
+      // $temp_range  = explode( "-", $ip_range['range'] );
       $lower_limit = array_shift( $temp_range );
       $upper_limit = array_pop( $temp_range );
 
