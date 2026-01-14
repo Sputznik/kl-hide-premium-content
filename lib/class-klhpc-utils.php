@@ -66,8 +66,8 @@ class KLHPC_UTILS extends KLHPC_BASE{
       $temp_range = is_array( $ip_range ) ? explode( "-", $ip_range['range'] ) : explode( "-", $ip_range );
       // NOTE: COMMENT THE ABOVE LINE & UNCOMMENT THE BELOW LINE AFTER THE DATA HAS BEEN SAVED AT LEAST ONCE WITH THE UPDATED DATA STRUCTURE.
       // $temp_range  = explode( "-", $ip_range['range'] );
-      $lower_limit = array_shift( $temp_range );
-      $upper_limit = array_pop( $temp_range );
+      $lower_limit = !empty( $temp_range[0] ) ? $temp_range[0] : '';
+      $upper_limit = !empty( $temp_range[1] ) ? $temp_range[1] : '';
 
       // EXIT THE LOOP IF IP IS FOUND
       if( self::IsIpInRange( $lower_limit, $upper_limit, $client_ip ) ){
